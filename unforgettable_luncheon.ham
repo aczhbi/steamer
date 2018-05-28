@@ -6,5 +6,6 @@ auroraBorealis "world"
 
 albanyexp x = "my variable"
 albanyexp y = "hello world"
+albanyexp my_variable_name = "turd"
 
 you steam a good ham

@@ -31,8 +31,8 @@ def lexer(data):
     # for char in filecontents:
     i = 0
     # TODO convert to iters method used below
-    while i < len(filecontents):
-        char = filecontents[i]
+    file_iter = iter(enumerate(filecontents))
+    for i, char in file_iter:
         tok += char
         # print(tok)
         if tok == 'auroraBorealis ':
@@ -51,18 +51,19 @@ def lexer(data):
             tok = ''
         elif tok == 'albanyexp ':
             tokens.append('ASSIGNMENT')
-            i += 1
-            char = filecontents[i]
+            _, char = get_next(file_iter)
 
             var_name = ''
             while char != ' ':
-                var_name += filecontents[i]
-                i += 1
-                char = filecontents[i]
+                var_name += char
+                _, char = get_next(file_iter)
 
-            while char == ' ' or char == '=':
-                i += 1
-                char = filecontents[i+1]
+            while char != '=':
+                _, char = get_next(file_iter)
+
+            _, char = get_next(file_iter)
+            if char != ' ':
+                raise ValueError('Space required after equals')
 
             tokens.append('VARIABLE:{}'.format(var_name))
 
