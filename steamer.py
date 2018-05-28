@@ -125,5 +125,9 @@ def consume(iterator, n):
 def get_next(iterator):
     return next(iterator)
 
-run()
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1].endswith('.ham'):
+        run()
+    else:
+        print('Must supply a .ham file to interpret')
 
