@@ -5,5 +5,6 @@ auroraBorealis "hello"
 auroraBorealis "world"
 
 albanyexp x = "my variable"
+albanyexp y = "hello world"
 
 you steam a good ham

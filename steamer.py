@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 import sys
+from itertools import islice
+import collections
 
 def open_file(filename):
     with open(filename, 'r') as f:
@@ -28,6 +30,7 @@ def lexer(data):
 
     # for char in filecontents:
     i = 0
+    # TODO convert to iters method used below
     while i < len(filecontents):
         char = filecontents[i]
         tok += char
@@ -68,14 +71,16 @@ def lexer(data):
             tokens.append('END_EXECUTION')
 
         i += 1
-    print(tokens)
+
     return tokens
 
 def parse(tokens):
 
     local_vars = {}
+    const_vars = {}
 
-    for i, token in enumerate(tokens):
+    token_iter = iter(enumerate(tokens))
+    for i, token in token_iter:
         if token == 'PRINT':
             next_tkn = tokens[i + 1]
 
@@ -88,7 +93,14 @@ def parse(tokens):
                 raise ValueError('Implement printing of non strings')
 
         elif token == 'ASSIGNMENT':
-            pass
+            _, token = get_next(token_iter)
+            tok_type, var_name = token.split(':')
+            # TODO check tok_type is VARIABLE
+            _, tok = get_next(token_iter)
+            tok_type, val = tok.split(':')
+            # TODO check the tok_type
+            local_vars[var_name] = val
+
         elif token == 'END_EXECUTION':
             print('\n----------------------------------------------\n   That was truly an unforgettable luncheon\n----------------------------------------------')
             sys.exit()
@@ -99,4 +111,18 @@ def run():
     tokens = lexer(data)
     parse(tokens)
 
+def consume(iterator, n):
+    "Advance the iterator n-steps ahead. If n is none, consume entirely."
+    # Use functions that consume iterators at C speed.
+    if n is None:
+        # feed the entire iterator into a zero-length deque
+        collections.deque(iterator, maxlen=0)
+    else:
+        # advance to the empty slice starting at position n
+        next(islice(iterator, n, n), None)
+
+def get_next(iterator):
+    return next(iterator)
+
 run()
+
