@@ -4,4 +4,6 @@ auroraBorealis "this is a string"
 auroraBorealis "hello"
 auroraBorealis "world"
 
+albanyexp x = "my variable"
+
 you steam a good ham

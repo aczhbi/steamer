@@ -26,7 +26,10 @@ def lexer(data):
 
     state = 0
 
-    for char in filecontents:
+    # for char in filecontents:
+    i = 0
+    while i < len(filecontents):
+        char = filecontents[i]
         tok += char
         # print(tok)
         if tok == 'auroraBorealis ':
@@ -44,14 +47,33 @@ def lexer(data):
             string += char
             tok = ''
         elif tok == 'albanyexp ':
-            # variable assignment
+            tokens.append('ASSIGNMENT')
+            i += 1
+            char = filecontents[i]
+
+            var_name = ''
+            while char != ' ':
+                var_name += filecontents[i]
+                i += 1
+                char = filecontents[i]
+
+            while char == ' ' or char == '=':
+                i += 1
+                char = filecontents[i+1]
+
+            tokens.append('VARIABLE:{}'.format(var_name))
+
             tok = ''
         elif tok == 'you steam a good ham':
             tokens.append('END_EXECUTION')
 
+        i += 1
+    print(tokens)
     return tokens
 
 def parse(tokens):
+
+    local_vars = {}
 
     for i, token in enumerate(tokens):
         if token == 'PRINT':
@@ -65,6 +87,8 @@ def parse(tokens):
             else:
                 raise ValueError('Implement printing of non strings')
 
+        elif token == 'ASSIGNMENT':
+            pass
         elif token == 'END_EXECUTION':
             print('\n----------------------------------------------\n   That was truly an unforgettable luncheon\n----------------------------------------------')
             sys.exit()
